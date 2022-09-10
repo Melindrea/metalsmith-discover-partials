@@ -22,7 +22,8 @@ module.exports = function (options) {
           if (err) {
             return done(err)
           }
-          let id = file.replace(options.directory + '/', '').replace(path.extname(file), '').replace('/', '-');
+          let id = file.replace(options.directory + '/', '').replace(path.extname(file), '').replaceAll('/', '-');
+          
           Handlebars.registerPartial(id, contents)
           done()
         });
