@@ -12,20 +12,22 @@ module.exports = function (options) {
     pattern: '.hbs'
   })
   return function (files, metalsmith, done) {
-    glob(options.directory + '/**/*' + options.pattern, function (err, files) {
+    let basedir = metalsmith.path(options.directory) + '/';
+    let fullPath = basedir + '**/*' + options.pattern;
+    glob(fullPath, function (err, files) {
       if (err) {
         return done(err)
       }
+      
       files.forEach(file => {
-        //onFile(f, options.directory, done);
         fs.readFile(file, 'utf8', function (err, contents) {
           if (err) {
             return done(err)
           }
-          let id = file.replace(options.directory + '/', '').replace(path.extname(file), '').replaceAll('/', '-');
+          let id = file.replace(basedir, '').replace(path.extname(file), '').replaceAll('/', '-');
           
           Handlebars.registerPartial(id, contents)
-          done()
+          done();
         });
       });
     });
